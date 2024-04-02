@@ -7,9 +7,16 @@ import com.nukateam.gunscore.client.model.GeoGunModel;
 import com.nukateam.gunscore.client.render.layers.GlowingLayer;
 import com.nukateam.gunscore.client.render.layers.LocalPlayerSkinLayer;
 import com.nukateam.gunscore.GunMod;
+import com.nukateam.gunscore.common.foundation.item.GunItem;
 import mod.azure.azurelib.cache.object.GeoBone;
+import mod.azure.azurelib.util.ClientUtils;
+import mod.azure.azurelib.util.RenderUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +30,8 @@ public class GunRendererDynamic extends GeoDynamicItemRenderer<GunItemAnimator> 
     public static final int PACKED_OVERLAY = 15728880;
     public static final String RIGHT_ARM = "right_arm";
     public static final String LEFT_ARM = "left_arm";
+    private TransformType transformType;
+    private MultiBufferSource bufferSource;
 
     private ItemStack renderStack;
     private boolean renderHands = false;
@@ -59,6 +68,8 @@ public class GunRendererDynamic extends GeoDynamicItemRenderer<GunItemAnimator> 
 
         this.renderStack = stack;
         this.renderHands = transformType == FIRST_PERSON_RIGHT_HAND || transformType == FIRST_PERSON_LEFT_HAND;
+        this.bufferSource = bufferSource;
+        this.transformType = transformType;
 
         if(buffEntity != null){
             entity = buffEntity;
@@ -97,11 +108,59 @@ public class GunRendererDynamic extends GeoDynamicItemRenderer<GunItemAnimator> 
     public void renderRecursively(PoseStack poseStack, GunItemAnimator animatable, GeoBone bone, RenderType renderType,
                                   MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick,
                                   int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        if(bone.getName().equals(RIGHT_ARM) || bone.getName().equals(LEFT_ARM)){
-            bone.setHidden(!renderHands);
+        var client = Minecraft.getInstance();
+        var renderArms = false;
+
+        //hiding the arm bones so they can get redone below
+        switch (bone.getName()) {
+            case "left_arm", "right_arm" -> {
+                bone.setHidden(true);
+                bone.setChildrenHidden(false);
+                renderArms = true;
+            }
         }
 
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        //after hiding the bones and checking of your display type to render them in, in this case first and third person
+        if (renderArms && this.transformType == ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND ||
+                this.transformType == ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND) {
+            var playerEntityRenderer = (PlayerRenderer) client.getEntityRenderDispatcher().getRenderer(client.player);
+            var playerEntityModel = playerEntityRenderer.getModel();
+            poseStack.pushPose();
+            RenderUtils.translateMatrixToBone(poseStack, bone);
+            RenderUtils.translateToPivotPoint(poseStack, bone);
+            RenderUtils.rotateMatrixAroundBone(poseStack, bone);
+            RenderUtils.scaleMatrixForBone(poseStack, bone);
+            RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
+            assert (client.player != null);
+            var playerSkin = ((LocalPlayer) ClientUtils.getClientPlayer()).getSkinTextureLocation();
+            var arm = this.bufferSource.getBuffer(RenderType.entitySolid(playerSkin));
+            var sleeve = this.bufferSource.getBuffer(RenderType.entityTranslucent(playerSkin));
+
+            if (bone.getName().equals("left_arm")) {
+                poseStack.scale(0.67f, 1.33f, 0.67f);
+                poseStack.translate(-0.25, -0.43625, 0.1625);
+                playerEntityModel.leftArm.setPos(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
+                playerEntityModel.leftArm.setRotation(0, 0, 0);
+                playerEntityModel.leftArm.render(poseStack, arm, packedLight, packedOverlay, 1, 1, 1, 1);
+
+                playerEntityModel.leftSleeve.setPos(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
+                playerEntityModel.leftSleeve.setRotation(0, 0, 0);
+                playerEntityModel.leftSleeve.render(poseStack, sleeve, packedLight, packedOverlay, 1, 1, 1, 1);
+            } else if (bone.getName().equals("right_arm")) {
+                poseStack.scale(0.67f, 1.33f, 0.67f);
+                poseStack.translate(0.25, -0.43625, 0.1625);
+                playerEntityModel.rightArm.setPos(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
+                playerEntityModel.rightArm.setRotation(0, 0, 0);
+                playerEntityModel.rightArm.render(poseStack, arm, packedLight, packedOverlay, 1, 1, 1, 1);
+
+                playerEntityModel.rightSleeve.setPos(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
+                playerEntityModel.rightSleeve.setRotation(0, 0, 0);
+                playerEntityModel.rightSleeve.render(poseStack, sleeve, packedLight, packedOverlay, 1, 1, 1, 1);
+            }
+            poseStack.popPose();
+        }
+        // This super call is needed with the custom getBuffer call for the weapon model to get it's texture back and not use the players skin
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, this.bufferSource.getBuffer(renderType), isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     protected void renderAttachments(ItemStack stack, GunItemAnimator item) {
