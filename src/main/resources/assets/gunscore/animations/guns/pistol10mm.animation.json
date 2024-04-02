@@ -5,32 +5,20 @@
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.25,
 			"bones": {
-				"muzzleflash": {
-					"position": {
-						"vector": [2.46125, 1.125, -1.5]
-					}
-				},
-				"gunbody": {
+				"rightArm": {
+					"rotation": {
+						"vector": [90, 0, 0]
+					},
 					"position": {
 						"0.0": {
-							"vector": [0, 0, 0]
+							"vector": [6, -2.825, 6.3]
 						},
 						"0.25": {
-							"vector": [2.46125, 1.125, -1.5]
+							"vector": [8.5, -1.75, 4.75]
 						}
 					}
 				},
-				"right_arm": {
-					"position": {
-						"0.0": {
-							"vector": [8, -1.75, 6.25]
-						},
-						"0.25": {
-							"vector": [10.5, 0, 4.5]
-						}
-					}
-				},
-				"left_arm": {
+				"leftArm": {
 					"position": {
 						"vector": [0, 0, 12]
 					},
@@ -46,6 +34,21 @@
 						"0.25": {
 							"vector": [2.46125, 1.125, -1.5]
 						}
+					}
+				},
+				"model": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [5, 5, 0]
+						}
+					}
+				},
+				"muzzle_flash": {
+					"scale": {
+						"vector": [0, 0, 0]
 					}
 				}
 			}
@@ -187,7 +190,7 @@
 						}
 					}
 				},
-				"right_arm": {
+				"rightArm": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -204,7 +207,7 @@
 					},
 					"position": {
 						"0.0": {
-							"vector": [8, -1.75, 6.25]
+							"vector": [8, -0.75, 5.55]
 						},
 						"0.75": {
 							"vector": [6.9, -1.75, 6.25]
@@ -213,11 +216,11 @@
 							"vector": [6.9, -1.75, 6.25]
 						},
 						"2.6667": {
-							"vector": [8, -1.75, 6.25]
+							"vector": [8, -0.75, 5.55]
 						}
 					}
 				},
-				"left_arm": {
+				"leftArm": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -343,7 +346,7 @@
 						}
 					}
 				},
-				"right_arm": {
+				"rightArm": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -372,7 +375,7 @@
 					},
 					"position": {
 						"0.0": {
-							"vector": [8, -1.75, 6.25]
+							"vector": [8, -0.75, 5.55]
 						},
 						"1.0": {
 							"vector": [1.7, -1.75, 3.45]
@@ -387,11 +390,11 @@
 							"vector": [1.7, -1.35, 3.45]
 						},
 						"5.0": {
-							"vector": [8, -1.75, 6.25]
+							"vector": [8, -0.75, 5.55]
 						}
 					}
 				},
-				"left_arm": {
+				"leftArm": {
 					"position": {
 						"0.0": {
 							"vector": [0, -8, 6]
@@ -436,7 +439,7 @@
 		"hold": {
 			"loop": true,
 			"bones": {
-				"left_arm": {
+				"leftArm": {
 					"position": {
 						"vector": [0, 0, 12]
 					},
@@ -444,9 +447,12 @@
 						"vector": [0, 0, 0]
 					}
 				},
-				"right_arm": {
+				"rightArm": {
+					"rotation": {
+						"vector": [90, 0, 0]
+					},
 					"position": {
-						"vector": [8, -1.75, 6.25]
+						"vector": [6, -2.825, 6.3]
 					}
 				},
 				"muzzle_flash": {
@@ -525,12 +531,15 @@
 						}
 					}
 				},
-				"right_arm": {
+				"rightArm": {
+					"rotation": {
+						"vector": [90, 0, 0]
+					},
 					"position": {
-						"vector": [8, -1.75, 6.25]
+						"vector": [6, -2.825, 6.3]
 					}
 				},
-				"left_arm": {
+				"leftArm": {
 					"position": {
 						"vector": [0, 0, 12]
 					},
@@ -763,7 +772,7 @@
 			"loop": true,
 			"animation_length": 0.29167,
 			"bones": {
-				"left_arm": {
+				"leftArm": {
 					"position": {
 						"vector": [0, 0, 12]
 					},
@@ -771,7 +780,7 @@
 						"vector": [0, 0, 0]
 					}
 				},
-				"right_arm": {
+				"rightArm": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]

@@ -5,7 +5,6 @@ import com.mrcrayfish.framework.api.client.FrameworkClientAPI;
 import com.nukateam.gunscore.client.ClientHandler;
 import com.nukateam.gunscore.client.MetaLoader;
 import com.nukateam.gunscore.client.data.handler.CrosshairHandler;
-import com.nukateam.gunscore.client.data.util.skin.PlayerSkinStorage;
 import com.nukateam.gunscore.common.base.utils.BoundingBoxManager;
 import com.nukateam.gunscore.common.base.utils.ProjectileManager;
 import com.nukateam.gunscore.common.data.datagen.*;
@@ -42,7 +41,6 @@ public class GunMod {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final String MOD_ID = "gunscore";
     public static final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
-    public static final PlayerSkinStorage SKIN_STORAGE = PlayerSkinStorage.INSTANCE;
 
 //    public GunMod() {
 //        AzureLib.initialize();

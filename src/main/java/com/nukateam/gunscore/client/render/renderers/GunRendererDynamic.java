@@ -5,9 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.nukateam.gunscore.client.animators.GunItemAnimator;
 import com.nukateam.gunscore.client.model.GeoGunModel;
 import com.nukateam.gunscore.client.render.layers.GlowingLayer;
-import com.nukateam.gunscore.client.render.layers.LocalPlayerSkinLayer;
 import com.nukateam.gunscore.GunMod;
-import com.nukateam.gunscore.common.foundation.item.GunItem;
 import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.util.ClientUtils;
 import mod.azure.azurelib.util.RenderUtils;
@@ -22,14 +20,13 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import static com.nukateam.gunscore.client.data.handler.GunRenderingHandler.getAttachmentNames;
 import static net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import static net.minecraft.client.renderer.block.model.ItemTransforms.TransformType.*;
 
 public class GunRendererDynamic extends GeoDynamicItemRenderer<GunItemAnimator> {
     public static final int PACKED_OVERLAY = 15728880;
-    public static final String RIGHT_ARM = "right_arm";
-    public static final String LEFT_ARM = "left_arm";
+    public static final String RIGHT_ARM = "rightArm";
+    public static final String LEFT_ARM = "leftArm";
     private TransformType transformType;
     private MultiBufferSource bufferSource;
 
@@ -39,7 +36,6 @@ public class GunRendererDynamic extends GeoDynamicItemRenderer<GunItemAnimator> 
 
     public GunRendererDynamic() {
         super(new GeoGunModel<>(), GunItemAnimator::new);
-        addRenderLayer(new LocalPlayerSkinLayer<>(this));
         addRenderLayer(new GlowingLayer<>(this));
 //        addRenderLayer(new AutoGlowingGeoLayer<>(this));
     }
@@ -113,7 +109,7 @@ public class GunRendererDynamic extends GeoDynamicItemRenderer<GunItemAnimator> 
 
         //hiding the arm bones so they can get redone below
         switch (bone.getName()) {
-            case "left_arm", "right_arm" -> {
+            case LEFT_ARM, RIGHT_ARM -> {
                 bone.setHidden(true);
                 bone.setChildrenHidden(false);
                 renderArms = true;
@@ -136,9 +132,10 @@ public class GunRendererDynamic extends GeoDynamicItemRenderer<GunItemAnimator> 
             var arm = this.bufferSource.getBuffer(RenderType.entitySolid(playerSkin));
             var sleeve = this.bufferSource.getBuffer(RenderType.entityTranslucent(playerSkin));
 
-            if (bone.getName().equals("left_arm")) {
+            if (bone.getName().equals(LEFT_ARM)) {
                 poseStack.scale(0.67f, 1.33f, 0.67f);
-                poseStack.translate(-0.25, -0.43625, 0.1625);
+//                poseStack.translate(-0.25, -0.43625, 0.1625);
+                poseStack.translate(-0.25, 0, 0.1625);
                 playerEntityModel.leftArm.setPos(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
                 playerEntityModel.leftArm.setRotation(0, 0, 0);
                 playerEntityModel.leftArm.render(poseStack, arm, packedLight, packedOverlay, 1, 1, 1, 1);
@@ -146,9 +143,10 @@ public class GunRendererDynamic extends GeoDynamicItemRenderer<GunItemAnimator> 
                 playerEntityModel.leftSleeve.setPos(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
                 playerEntityModel.leftSleeve.setRotation(0, 0, 0);
                 playerEntityModel.leftSleeve.render(poseStack, sleeve, packedLight, packedOverlay, 1, 1, 1, 1);
-            } else if (bone.getName().equals("right_arm")) {
+            } else if (bone.getName().equals(RIGHT_ARM)) {
                 poseStack.scale(0.67f, 1.33f, 0.67f);
-                poseStack.translate(0.25, -0.43625, 0.1625);
+//                poseStack.translate(0.25, -0.43625, 0.1625);
+                poseStack.translate(0.25, 0, 0.1625);
                 playerEntityModel.rightArm.setPos(bone.getPivotX(), bone.getPivotY(), bone.getPivotZ());
                 playerEntityModel.rightArm.setRotation(0, 0, 0);
                 playerEntityModel.rightArm.render(poseStack, arm, packedLight, packedOverlay, 1, 1, 1, 1);
